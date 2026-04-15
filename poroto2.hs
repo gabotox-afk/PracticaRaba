@@ -48,3 +48,6 @@ borrar (s, c)
 --3)
 
 data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving (Show, Eq)
+
+
+--pene
