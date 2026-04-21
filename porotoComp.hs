@@ -32,3 +32,6 @@ selec (R : cs) (N izq der) = selec cs der
 
 
 
+
+
+
