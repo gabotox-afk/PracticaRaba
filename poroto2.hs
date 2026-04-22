@@ -50,4 +50,9 @@ borrar (s, c)
 data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving (Show, Eq)
 
 
---pene
+--8
+data Color = R | B deriving show
+data RBT a = E | N Color (RBT a) a (RBT a) deriving show
+
+formordlist:: [a] -> RBT a 
+formordlist xs = let
