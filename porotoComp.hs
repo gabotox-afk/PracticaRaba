@@ -29,8 +29,37 @@ selec (L : cs) (N izq der) = selec cs izq
 selec (R : cs) (N izq der) = selec cs der 
 
 
+enum :: Arb -> [[Cmd]]
+enum  E  = []
+enum (H x)  = [[]]
+enum (N l r) = map (L:) (enum l) ++ map (R:) (enum r)
 
 
+-- 3
+type Nombre = String
+data Estado a = Estado [(Nombre , a)] deriving show
+data Maybe a = Nothing | Just a deriving Show
+
+inicial :: Estado a
+inicial = Estado []
+
+update :: Nombre -> a -> Estado a -> Estado a
+update n x (Estado []) = (Estado [(n , x)])
+update n x (Estado ((n2 , y) : xs) )
+                          | n == n2 = (Estado ( n2,x): xs)
+                          | otherwise = update n x (Estado xs) 
+
+lookfor :: Nombre -> Estado a -> Maybe a
+lookfor n Estado [] = Nothing
+lookfor n (Estado ((n2,x):xs))
+                            | n == n2 =Just x
+                            | otherwise = lookfor n (Estado xs)
+
+free :: Nombre -> Estado a -> Estado a
+free n (Estado []) = Estado []
+free n (Estado ((n2,x):xs))
+                        | n == n2 = Estado xs
+                        | otherwise = Estado (n2,x ):(free n (Estado xs))
 
 
 

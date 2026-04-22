@@ -51,8 +51,18 @@ data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving (Show, Eq)
 
 
 --8
-data Color = R | B deriving show
-data RBT a = E | N Color (RBT a) a (RBT a) deriving show
+data Color2 = R | B deriving show
+data RBT a = E | N Color2 (RBT a) a (RBT a) deriving show
 
 formordlist:: [a] -> RBT a 
 formordlist xs = let
+
+from' :: Color2 -> [a] -> RBT a
+from'  c [] = E
+from' c xs = let n = length xs
+                |m = div n 2
+                |ls = take m xs
+                |x = xs !! m
+                |rs = drop (m+1) xs
+                |c' = if (c ==R) then B else r
+              in N c (from' c' ls) x ( from' c' rs)
