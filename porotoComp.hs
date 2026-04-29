@@ -97,3 +97,36 @@ sucepredece (Nodo izq val der) x
     
     predIzq = predecesor izq
     succDer = succesor der 
+
+type Rank = Int
+data Heap a = E | N Rank a (Heap a) (Heap a)
+
+merge :: Ord a ⇒ Heap a → Heap a → Heap a
+merge h1 E = h1
+merge E h2 = h2
+merge h1@(N x a1 b1) h2@(N y a2 b2) =
+                            if x <= y then makeH x a1 (merge b1 h2)
+                                     else makeH y a2 (merge h1 b2)
+
+rank :: Heap a → Rank
+rank E = 0
+rank (N r _ _ _) = r
+
+makeH x a b = if rank a >= rank b then N (rank b + 1) x a b
+                                 else N (rank a + 1) x b a
+
+
+heapToList:: Heap a -> [a]
+heapToList E = []
+heapToList (N r x h1 h2 ) =  heapToList h2 ++ [x] ++ heapToList h1 
+
+data Color = R | B
+data RBT a = E | T Color (RBT a) a (RBT a)
+
+esRBT :: RBT a -> Maybe Bool
+esRBT E = Just True
+esRBT (T R i x d) = Nothing
+esRBT (T B i x d) 
+    | esRBT i == Just False = Just False
+    | esRBT d == Just False = Just False
+    | otherwise = Just True 

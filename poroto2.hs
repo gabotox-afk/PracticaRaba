@@ -74,5 +74,5 @@ type Rank = Int
 data Heap a = E | N Rank a (Heap a) (Heap a)
 
 fromlist:: [a] -> Heap a
-fromlist xs =  let hs = map (\n -> N 0 x E E)
+fromlist xs = foldr merge E (map (\x -> N 0 x E E) xs)
 
