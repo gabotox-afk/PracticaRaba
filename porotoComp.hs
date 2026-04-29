@@ -61,6 +61,39 @@ free n (Estado ((n2,x):xs))
                         | n == n2 = Estado xs
                         | otherwise = Estado (n2,x ):(free n (Estado xs))
 
+--4
+data Bin a = Hoja | Nodo (Bin a) a (Bin a)
 
+nodosL :: Bin a -> Int -> Int
+nodosL Hoja _ = 0
+nodosL (Nodo izq _ der) 0 = 1  
+nodosL (Nodo izq _ der) n = nodosL izq (n-1) + nodosL der (n-1) 
 
+esBalanceado :: Bin a -> Int
+esBalanceado Hoja = 0
+esBalanceado (Nodo izq _ der) 
+    | izqBalanceado == -1 = -1
+    | derBalanceado == -1 = -1
+    | abs(izqBalanceado - derBalanceado) <= 1 = 1 + max izqBalanceado derBalanceado
+    | otherwise = -1
+  where
+    izqBalanceado = esBalanceado izq
+    derBalanceado = esBalanceado der
 
+sucepredece :: Ord a => Bin a -> a -> (Maybe a, Maybe a)
+sucepredece Hoja _ = (Nothing, Nothing)
+sucepredece (Nodo izq val der) x
+    | x < val   = (Just val, predIzq)
+    | x > val   = (succDer, Just val)
+    | otherwise = (succesor der, predecesor izq)
+  where
+    succesor Hoja = Nothing
+    succesor (Nodo Hoja v der') = Just v
+    succesor (Nodo izq' _ _) = succesor izq'
+    
+    predecesor Hoja = Nothing
+    predecesor (Nodo izq' v Hoja) = Just v
+    predecesor (Nodo _ _ der') = predecesor der'
+    
+    predIzq = predecesor izq
+    succDer = succesor der 
