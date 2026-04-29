@@ -66,3 +66,13 @@ from' c xs = let n = length xs
                 |rs = drop (m+1) xs
                 |c' = if (c ==R) then B else r
               in N c (from' c' ls) x ( from' c' rs)
+
+
+--10 
+
+type Rank = Int
+data Heap a = E | N Rank a (Heap a) (Heap a)
+
+fromlist:: [a] -> Heap a
+fromlist xs =  let hs = map (\n -> N 0 x E E)
+
