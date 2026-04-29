@@ -49,6 +49,66 @@ borrar (s, c)
 
 data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving (Show, Eq)
 
+headCL :: CList a -> a
+headCL (CUnit x) = x
+headCL (Consnoc x l y) = x
+
+tailCL :: CList a -> CList a
+tailCL (CUnit _) = EmptyCL
+tailCL (Consnoc _ l _) = l
+
+isEmptyCl:: CList a -> Bool
+isEmptyCl EmptyCL = True
+isEmptyCl _ = False
+
+isCunit:: CList a -> Bool
+isCunit (CUnit a ) = True
+isCunit _ = False
+
+reverseClist :: CList a -> CList a
+reverseClist (CUnit x) = Cunit x
+reverseClist (Consnoc p cl u) = (Consnoc u (reverseClist cl) u)
+
+-- c
+
+initCL :: CList a -> CList a
+initCL (CUnit _) = EmptyCL
+initCL (Consnoc h EmptyCL _) = CUnit h
+initCL (Consnoc h m _) = Consnoc h (initCL m) (lastCL m)
+
+snocCL :: CList a -> a -> CList a
+snocCL EmptyCL x = CUnit x
+snocCL (CUnit h) x = Consnoc h EmptyCL x
+snocCL (Consnoc h m l) x = Consnoc h (snocCL m l) x
+
+inits :: CList a -> CList (CList a)
+inits EmptyCL = CUnit EmptyCL
+inits xs = snocCL (inits (initCL xs)) xs
+
+-- d
+lasts :: CList a -> CList (CList a)
+lasts EmptyCL = CUnit EmptyCL
+lasts xs = snocCL (lasts (tailCL xs)) xs
+
+-- e
+consCL :: a -> CList a -> CList a
+consCL x EmptyCL = CUnit x
+consCL x (CUnit y) = Consnoc x EmptyCL y
+consCL x (Consnoc h m l) = Consnoc x (consCL h m) l
+
+appendCL :: CList a -> CList a -> CList a
+appendCL EmptyCL ys = ys
+appendCL xs EmptyCL = xs
+appendCL (CUnit x) ys = consCL x ys
+appendCL (Consnoc h m l) ys = consCL h (appendCL (snocCL m l) ys)
+
+concatCL :: CList (CList a) -> CList a
+concatCL EmptyCL = EmptyCL
+concatCL (CUnit xs) = xs
+concatCL (Consnoc h m l) = appendCL h (appendCL (concatCL m) l)
+
+
+
 
 --8
 data Color2 = R | B deriving show
