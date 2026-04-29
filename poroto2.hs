@@ -107,7 +107,80 @@ concatCL EmptyCL = EmptyCL
 concatCL (CUnit xs) = xs
 concatCL (Consnoc h m l) = appendCL h (appendCL (concatCL m) l)
 
+--4
+data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
 
+eval :: Aexp -> Int
+eval (Num x) = x
+eval (Prod x y) = eval x * eval y
+eval (Div x y) = eval x `div` eval y
+
+seval :: Aexp -> Maybe Int
+seval (Num x) = Just x
+seval (Prod x y) = do
+    a <- seval x
+    b <- seval y
+    return (a * b)
+seval (Div x y) = do
+    a <- seval x
+    b <- seval y
+    if b == 0
+        then Nothing
+        else Just (a `div` b)
+
+--5
+data BST a = Hoja | Nodo (BST a) a (BST a) 
+
+maximum:: BST a -> Maybe a
+maximum Hoja = Nothing
+maximum (Nodo i x Hoja) = Just x
+maximum (Nodo i x d) = maximum d
+
+b2l::Ord => BST a -> [a]
+b2l Hoja = []
+b2l (Nodo i x d) = b2l i ++ [x] ++ b2l d
+
+ordd:: Ord a =>[a] -> Bool
+ordd [] = True
+ordd [_] = True
+ordd (x:y:xs)
+            | x < y = True && ordd (y:xs)
+            | otherwise = False
+            
+esBST:: BST a -> Bool
+esBST t= ordd(b2l t)
+
+--6
+data Tree a = Leaf | TNodo (Tree a) a (Tree a) 
+
+completo :: a -> Int -> Tree a
+completo x 0 = Leaf
+completo x 1 = TNodo Leaf x Leaf
+completo x d = TNodo (completo x (d-1)) x (completo x (d-1))
+
+balanceado :: a -> Int -> Tree a
+balanceado x 0 = Leaf
+balanceado x d = let m = (n-1 )`div` 2
+                     sub = balanceado x 
+                 in if (n-1) `mod` 2 == 0
+                    then TNodo sub x sub
+                    else TNodo sub x (balanceado x (m+1))
+
+--7
+
+member:: Int -> BST Int -> Bool
+member x (Nodo i v d)
+                    |x == v = True
+                    |x < v = member x i
+                    |x > v = member x d
+                    |otherwise = False
+
+memberBST :: Ord a => a -> BST a -> Bool
+memberBST _ Hoja = False
+memberBST a (Nodo l b r)
+    | a == b    = True           -- 1 comparación
+    | a < b     = memberBST a l -- 1 comparación + recursion
+    | otherwise = memberBST a r -- 1 comparación + recursion
 
 
 --8
