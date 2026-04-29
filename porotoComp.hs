@@ -37,7 +37,7 @@ enum (N l r) = map (L:) (enum l) ++ map (R:) (enum r)
 
 -- 3
 type Nombre = String
-data Estado a = Estado [(Nombre , a)] deriving show
+data Estado a = Estado [(Nombre , a)] deriving Show
 data Maybe a = Nothing | Just a deriving Show
 
 inicial :: Estado a
